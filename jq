@@ -1,6 +1,7 @@
 #jq useful commands
 #ref link 1: https://community.f5.com/t5/technical-articles/icontrol-rest-jq-cookbook-part-2-intermediate/ta-p/287437
-#ref link 2:https://www.baeldung.com/linux/jq-command-json
+#ref link 2: https://www.baeldung.com/linux/jq-command-json
+#ref link 3: https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4
 
 #Count a number of objects
 jq '.items | length' file.json
