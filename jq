@@ -30,4 +30,7 @@ echo 1604039337667000 | jq '. * pow(10; -6) | todate'
 #Apply functions to a single field
 cat file.json | jq '.[] | [.actor,(.scopes|tostring|gsub("[\",]";"|"))] | join(",")'
 
+#Remove new line and global replace strings 
+cat file.json | jq '.[] | [.actor,(.scopes|tostring|sub("\\n";"")|gsub("[,|\"]";"|"))]'
+
 
