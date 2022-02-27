@@ -2,6 +2,8 @@
 #ref link 1: https://community.f5.com/t5/technical-articles/icontrol-rest-jq-cookbook-part-2-intermediate/ta-p/287437
 #ref link 2: https://www.baeldung.com/linux/jq-command-json
 #ref link 3: https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4
+#ref link 4: https://stedolan.github.io/jq/manual/#Invokingjq
+#ref link 5: https://megamorf.gitlab.io/cheat-sheets/jq/
 
 #Count a number of objects
 jq '.items | length' file.json
@@ -27,6 +29,10 @@ jq -r '.fileBlacklistPathPrefix | split(" ") | .[] | gsub("{|}"; "")' file.json
 jq -r '.lastUpdateMicros, .expirationMicros | ./(1000*1000) | todate' fiile.json
 #The literal 1000*1000 looks ugly, but it is better than 1000000 (IMHO). If you prefer, you can use the pow function to compute 10 to the power of negative 6.
 echo 1604039337667000 | jq '. * pow(10; -6) | todate'
+
+#Sort By
+# -s converts to blob for sorting
+cat file.json | jq -rs '.[] | sort_bv(.datetime)'
 
 #Extras
 #Apply functions to a single field
