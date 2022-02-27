@@ -4,6 +4,7 @@
 #ref link 3: https://gist.github.com/olih/f7437fb6962fb3ee9fe95bda8d2c8fa4
 #ref link 4: https://stedolan.github.io/jq/manual/#Invokingjq
 #ref link 5: https://megamorf.gitlab.io/cheat-sheets/jq/
+#ref link 6: https://hyperpolyglot.org/json
 
 #Count a number of objects
 jq '.items | length' file.json
