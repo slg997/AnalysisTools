@@ -1,1 +1,23 @@
 #ref link 1: https://github.com/Azure/Azure-Sentinel
+
+#KQL Build a table of process chain related uncompressing a file from email client to spot any unusal process and commands
+ EmailAttachmentInfo
+| where FileType =~ ("zip")
+//| where FileName startswith "invoice"
+| join kind=inner EmailEvents on NetworkMessageId
+| where DeliveryAction =~ "Delivered"
+| where EmailDirection =~ "Inbound"
+| project RecipientEmailAddress, attachment_filename=FileName
+//Identify grandparent process (commonly email client like outlook) downloadeded and subsequent parent process uncompressing the .zip file
+| join kind=inner DeviceProcessEvents on $left.RecipientEmailAddress == $right.AccountUpn
+| where ProcessCommandLine contains attachment_filename
+| where isnotempty(ProcessId)
+| project Timestamp, attachment_filename, AccountUpn, DeviceName, gparent_proc_ts=InitiatingProcessCreationTime, gparent_proc_id=InitiatingProcessId, gparent_proc_filename=InitiatingProcessFileName, parent_proc_id=ProcessId, parent_proc_filename=FileName, parent_cmd=ProcessCommandLine, parent_proc_ts=ProcessCreationTime
+//Identify child process post uncompressing the .zip file
+| join kind=inner DeviceProcessEvents on DeviceName, AccountUpn
+| where InitiatingProcessId == parent_proc_id and ProcessCreationTime >= parent_proc_ts
+| project Timestamp1, DeviceName, AccountUpn, gparent_proc_ts, gparent_proc_id, gparent_proc_filename, parent_proc_ts, parent_proc_id, parent_proc_filename, parent_cmd, child_proc_ts=ProcessCreationTime, child_proc_id=ProcessId, child_proc_filename=FileName,child_proc_cmd=ProcessCommandLine
+| join kind=inner DeviceProcessEvents on DeviceName, AccountUpn
+| where InitiatingProcessId == child_proc_id and ProcessCreationTime >= child_proc_ts
+| project Timestamp1, DeviceName, AccountUpn, gparent_proc_ts, gparent_proc_id, gparent_proc_filename, parent_proc_ts, parent_proc_id, parent_proc_filename, parent_cmd, child_proc_ts, child_proc_id, child_proc_filename,child_proc_cmd,  ProcessCreationTime, ProcessId, FileName, ProcessCommandLine
+
