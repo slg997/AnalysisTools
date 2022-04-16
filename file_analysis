@@ -4,5 +4,9 @@
 
 strings <file_name>
 
+# 'cat' - Display content of a file along with grep to search its content:
+
+cat <second_malicious_file> | grep <string_from_first_malicious_file>
+
 # 'xxd' - Display three columns: the first contains the offset inside the files where the hexadecimal occurs, the second returns the hexadecimal values inside the files, and the third is the ASCII representation of the hexadecimal characters at that offset:
 xxd <file_name>
