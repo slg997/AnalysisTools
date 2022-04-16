@@ -1,0 +1,8 @@
+#Basic file analysis technique to aid various endeaviours such as yara rule creation, static file analysis
+
+# 'Strings" - Display every visible ASCII string inside a file:
+
+strings <file_name>
+
+# 'xxd' - Display three columns: the first contains the offset inside the files where the hexadecimal occurs, the second returns the hexadecimal values inside the files, and the third is the ASCII representation of the hexadecimal characters at that offset:
+xxd <file_name>
