@@ -1,0 +1,12 @@
+# Create a calendar table for time series
+# At Transform Data
+1 - Press Enter Data button and give column name; "StartDate"
+2 - Put in earlies date you desired; 01/01/2022 then OK
+3 - Add new custom Column and give column name; "EndDate"
+4 - Put in custom formula; Date.From(DateTime.LocalNow()) then OK
+5 - Change data type of  both StartDate and EndDate date
+6 - Add new custom Column and give column name; "Date"
+7 - Put in custom formula; { Number.From([StartDate])..Number.From([EndDate]) } then OK
+8 - Expand rows by clicking on expand icon next to Date column
+9 - Change data type of Date column to date
+10 - Remove column StartDate and EndDate
