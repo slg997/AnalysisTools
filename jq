@@ -45,5 +45,6 @@ cat file.json | jq '.[] | [.actor,(.scopes|tostring|sub("\\n";"")|gsub("[,|\"]";
 #When parse requirement is long!
 cat file.json | jq.exe -jr '.[] | .created_at,",",.user,",",.actor,",",.actor_id,",",.action,",",.actor_ip,",",.actor_ip_was,",",.actor_location,",",.actor_location_was.country_name,",",.actor_session,",",.application_id,",",.application_name,",",.category_type,",",.client_id,",",.controller_action,",",.from,",",.hashed_token,",",.method,",",.note,",",.operation,",",.oauth_access_id,",",.referrer,",",.request_category,",",.request_id,",",(.scopes|tostring|sub("\\n";"")|gsub("[,\"]";"|")),",",.server_id,",",.two_factor,",",.token_last_eight,",",.url,",",.user_agent,",",.user_id,",",.user_session_id,",",.associated_user_ids,",",.associated_user_logins,",",.org_id,"\r\n"'
 
-
+#Extract SSL Certificate CN from ZoomEye json file
+cat file.json | jq -r '. | .matches[] |[.timestamp,.ip,.portinfo.port,.portinfo.device,.portinfo.app,(.ssl|capture("CN=(?<cert>[a-z0-9\\.\\-\\_]+)") | .cert | tostring )] | join(",")'
 
