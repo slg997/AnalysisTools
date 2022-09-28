@@ -48,3 +48,12 @@ cat file.json | jq.exe -jr '.[] | .created_at,",",.user,",",.actor,",",.actor_id
 #Extract SSL Certificate CN from ZoomEye json file
 cat file.json | jq -r '. | .matches[] |[.timestamp,.ip,.portinfo.port,.portinfo.device,.portinfo.app,(.ssl|capture("CN=(?<cert>[a-z0-9\\.\\-\\_]+)") | .cert | tostring )] | join(",")'
 
+#Use arguments
+#Select item in time range
+cat file.json | jq --arg s '2016-10-21T20:51' --arg e '2016-10-22T08:09' 'map(select(.created_at | . >= $s and . <= $e + "z"))'
+#Arguments --arg s '2016-10-21T20:51' and --arg e '2016-10-22T08:09' define variables $s (start of date+time range) and $e (end of date+time range) respectively, for use inside the jq script.
+#Function map() applies the enclosed expression to all the elements of the input array and outputs the results as an array, too.
+#Function select() accepts a filtering expression: every input object is evaluated against the enclosed expression, and the input object is only passed out if the expression evaluates to a “truthy” value.
+#Expression .created_at | . >= $s and . <= $e + "z" accesses each input object’s created_at property and sends its value to the comparison expression, which performs lexical comparison, which - due to the formatting of the date+time strings - amounts to chronological comparison.
+#Note the trailing "z" appended to the range endpoint, to ensure that it matches all date+time strings in the JSON string that prefix-match the endpoint; e.g., endpoint 2016-10-22T08:09 should match 2016-10-22T08:09:01 as well as 2016-10-22T08:59.
+#This lexical approach allows you to specify as many components from the beginning as desired in order to narrow or widen the date range; e.g. --arg s '2016-10-01' --arg e '2016-10-31' would match all entries for the entire month of October 2016.
